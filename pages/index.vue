@@ -1,0 +1,77 @@
+<template>
+  	
+  <div> 
+     <b-navbar type="dark" variant="dark">
+      <b-navbar-brand href="#">Notes App</b-navbar-brand>
+ 
+      <b-navbar-toggle target="navbarNotes"></b-navbar-toggle>
+ 
+      <b-collapse id="navbarNotes" is-nav>
+        <b-navbar-nav class="ml-auto">
+          <b-nav-item-dropdown :text="primeiroNome" right>
+            <b-dropdown-item href="perfil">Perfil</b-dropdown-item>
+            <b-dropdown-item href="#" @click.prevent="logout"
+              >Sair</b-dropdown-item
+            >
+          </b-nav-item-dropdown>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
+
+  <div class="container">
+    <p v-if="$fetchState.pending">Carregando...</p>
+    <p v-else-if="$fetchState.error">Ocorreu um erro :(</p>
+    <div class="row">
+      <div v-for="nota of notas" :key="nota.id" class="col-md-3">
+        <div class="card bg-warning my-3">
+          <div class="card-body">
+            <h5 class="card-title">{{ nota.titulo }}</h5>
+            <p  v-if= "nota.descricao" class="card-text">
+               {{ nota.descricao }}
+            </p>
+          </div>
+    <p v-if="$fetchState.pending" class="text-center">Carregando...</p>
+    <p v-else-if="$fetchState.error" class="text-center">
+      Ocorreu um erro :(
+         </p>
+         <div v-else class="row">
+      <div v-for="nota of notas" :key="nota.id" class="col-md-3">
+        <div class="card bg-warning my-3">
+          <div class="card-body">
+            <h5 class="card-title">{{ nota.titulo }}</h5>
+            <p v-if="nota.descricao" class="card-text">
+              {{ nota.descricao }}
+            </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  
+  </template>
+
+<script>
+export default {
+  layout: "home",
+  middleware: "auth",
+  async fetch() {
+    await this.$store.dispatch("nota/list", this.usuario.id);
+  },
+  computed: {
+    usuario() {
+      return this.$store.state.auth.user;
+    },
+    notas() {
+      return this.$store.state.nota.list;
+    }
+  }
+};
+</script>
+
+<style>
+.card {
+  min-height: 15rem;
+}
+</style>
+
