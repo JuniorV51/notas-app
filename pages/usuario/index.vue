@@ -50,21 +50,23 @@
 export default {
   data() {
     return {
+      nome: null,
       email: null,
       senha: null
     };
   },
   methods: {
-    async login() {
+    async cadastro() {
       try {
-         await this.$auth.loginWith("local", {
+         await this.$auth.cadastroWith("local", {
           data: {
+            nome: this.nome,
             email: this.email,
             senha: this.senha
           }
         });
  
-        this.$router.push("/");
+        this.$router.post("/");
       } catch (e) {
         console.log(e);
       }
