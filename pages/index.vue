@@ -1,55 +1,34 @@
 <template>
-  	
-  <div> 
-     <b-navbar type="dark" variant="dark">
-      <b-navbar-brand href="#">Notes App</b-navbar-brand>
- 
-      <b-navbar-toggle target="navbarNotes"></b-navbar-toggle>
- 
-      <b-collapse id="navbarNotes" is-nav>
-        <b-navbar-nav class="ml-auto">
-          <b-nav-item-dropdown :text="primeiroNome" right>
-            <b-dropdown-item href="perfil">Perfil</b-dropdown-item>
-            <b-dropdown-item href="#" @click.prevent="logout"
-              >Sair</b-dropdown-item
-            >
-          </b-nav-item-dropdown>
-        </b-navbar-nav>
-      </b-collapse>
-    </b-navbar>
+  <div>
+    <div class="text-center">
+      <b-button
+        v-if="$nuxt.isOnline"
+        to="nota/new"
+        variant="dark"
+        size="lg"
+        class="my-5"
+        >Nova Nota</b-button
+      >
+    </div>
 
-  <div class="container">
-    <p v-if="$fetchState.pending">Carregando...</p>
-    <p v-else-if="$fetchState.error">Ocorreu um erro :(</p>
-    <div class="row">
-      <div v-for="nota of notas" :key="nota.id" class="col-md-3">
-        <div class="card bg-warning my-3">
-          <div class="card-body">
-            <h5 class="card-title">{{ nota.titulo }}</h5>
-            <p  v-if= "nota.descricao" class="card-text">
-               {{ nota.descricao }}
-            </p>
-          </div>
     <p v-if="$fetchState.pending" class="text-center">Carregando...</p>
     <p v-else-if="$fetchState.error" class="text-center">
       Ocorreu um erro :(
-         </p>
-         <div v-else class="row">
+    </p>
+    <div v-else class="row">
       <div v-for="nota of notas" :key="nota.id" class="col-md-3">
-        <div class="card bg-warning my-3">
+        <div class="card bg-warning my-3" @click="editar(nota.id)">
           <div class="card-body">
             <h5 class="card-title">{{ nota.titulo }}</h5>
             <p v-if="nota.descricao" class="card-text">
               {{ nota.descricao }}
             </p>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  </div>
-
-  
-  </template>
+</template>
 
 <script>
 export default {
@@ -65,6 +44,11 @@ export default {
     notas() {
       return this.$store.state.nota.list;
     }
+  },
+  methods: {
+    editar(id) {
+      this.$router.push(`nota/edit/${id}`);
+    }
   }
 };
 </script>
@@ -72,6 +56,8 @@ export default {
 <style>
 .card {
   min-height: 15rem;
+  cursor: pointer;
 }
 </style>
+
 
